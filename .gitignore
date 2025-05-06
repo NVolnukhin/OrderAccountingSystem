@@ -1,0 +1,42 @@
+## Общие .NET / Visual Studio
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+.vscode/
+.vs/
+TestResults/
+*.dbmdl
+*.bak
+*.swp
+
+## NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+## Конфигурационные файлы
+appsettings.json
+appsettings.*.json
+secrets.json
+*.config.js
+*.env
+
+## Docker
+docker-compose.override.yml
+
+## IDE / Система
+.idea/
+.DS_Store
+Thumbs.db
+
+## База данных / временные файлы
+*.sql
+*.csv
