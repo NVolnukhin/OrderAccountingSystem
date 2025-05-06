@@ -18,14 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OrderService.Application\OrderService.Application.csproj" />
+    <ProjectReference Include="..\OrderService.Contracts\OrderService.Contracts.csproj" />
     <ProjectReference Include="..\OrderService.Domain\OrderService.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="OrderService.Contracts">
-      <HintPath>..\OrderService.Contracts\bin\Debug\net8.0\OrderService.Contracts.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
