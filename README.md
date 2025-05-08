@@ -1,2 +1,2 @@
 # OrderAccountingSystem
-Microservices and queue
+Microservices and RabbitMQ
