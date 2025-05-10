@@ -19,8 +19,7 @@ public class RabbitMQMessageBroker : IMessageBroker, IDisposable
         _connection = connection;
         _channel = _connection.CreateModel();
         _logger = logger;
-
-        // Declare exchange
+        
         _channel.ExchangeDeclare(CartCheckoutExchange, ExchangeType.Fanout, durable: true);
     }
 
