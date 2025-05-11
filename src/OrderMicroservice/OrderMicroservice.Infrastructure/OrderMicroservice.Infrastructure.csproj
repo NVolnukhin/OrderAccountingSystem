@@ -24,6 +24,7 @@
     <ProjectReference Include="..\OrderMicroservice.Contracts\OrderMicroservice.Contracts.csproj" />
     <ProjectReference Include="..\OrderMicroservice.Domain\OrderMicroservice.Domain.csproj" />
     <ProjectReference Include="..\OrderMicroservice.Application\OrderMicroservice.Application.csproj" />
+    <ProjectReference Include="../../Shared.Contracts/Shared.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
