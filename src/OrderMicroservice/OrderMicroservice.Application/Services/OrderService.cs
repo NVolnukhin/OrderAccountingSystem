@@ -7,9 +7,12 @@ namespace OrderMicroservice.Application.Services;
 
 public enum OrderStatus
 {
+    Created,
     Pending,
-    Processing,
-    Shipped,
+    Paid,
+    Unpaid,
+    Refunded,
+    TransferredForDelivery,
     Delivered,
     Cancelled
 }

@@ -8,4 +8,8 @@
     <AssemblyName>OrderMicroservice.Contracts</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../../Shared.Contracts/Shared.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>
