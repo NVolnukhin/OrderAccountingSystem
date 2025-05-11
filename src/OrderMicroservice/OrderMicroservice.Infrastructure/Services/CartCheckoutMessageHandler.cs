@@ -5,6 +5,7 @@ using OrderMicroservice.Application.Interfaces;
 using OrderMicroservice.Contracts.DTOs.Order;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Text.Json.Serialization;
 
 namespace OrderMicroservice.Infrastructure.Services;
 
@@ -54,13 +55,27 @@ public class CartCheckoutMessageHandler : IDisposable
 
         try
         {
+            _logger.LogInformation("Attempting to deserialize message: {Message}", message);
             var checkoutMessage = JsonSerializer.Deserialize<CartCheckoutMessage>(message);
+            _logger.LogInformation("Deserialized message - UserId: {UserId}, Items count: {ItemCount}, DeliveryAddress: {Address}", 
+                checkoutMessage?.UserId, checkoutMessage?.Items.Count, checkoutMessage?.DeliveryAddress);
+            
             if (checkoutMessage == null)
             {
                 _logger.LogError("Failed to deserialize cart checkout message");
                 _channel.BasicNack(ea.DeliveryTag, false, false);
                 return;
             }
+
+            if (checkoutMessage.UserId == Guid.Empty)
+            {
+                _logger.LogError("Invalid UserId in cart checkout message: {UserId}", checkoutMessage.UserId);
+                _channel.BasicNack(ea.DeliveryTag, false, false);
+                return;
+            }
+
+            _logger.LogInformation("Processing cart checkout for user {UserId} with {ItemCount} items", 
+                checkoutMessage.UserId, checkoutMessage.Items.Count);
 
             var catalogService = scope.ServiceProvider.GetRequiredService<ICatalogService>();
             var orderService = scope.ServiceProvider.GetRequiredService<IOrderService>();
@@ -144,14 +159,22 @@ public class CartCheckoutMessageHandler : IDisposable
 
     private class CartCheckoutMessage
     {
+        [JsonPropertyName("userId")]
         public Guid UserId { get; set; }
+
+        [JsonPropertyName("deliveryAddress")]
         public string DeliveryAddress { get; set; } = string.Empty;
+
+        [JsonPropertyName("items")]
         public List<CartItemMessage> Items { get; set; } = new();
     }
 
     private class CartItemMessage
     {
+        [JsonPropertyName("productId")]
         public int ProductId { get; set; }
+
+        [JsonPropertyName("quantity")]
         public int Quantity { get; set; }
     }
 
