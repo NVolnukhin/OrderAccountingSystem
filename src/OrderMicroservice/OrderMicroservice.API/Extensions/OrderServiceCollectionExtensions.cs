@@ -55,7 +55,12 @@ public static class OrderServiceCollectionExtensions
 
         // Register services
         services.AddScoped<IOrderService, OrderService>();
-        services.AddScoped<IMessageBroker, RabbitMQMessageBroker>();
+        services.AddSingleton<IMessageBroker, RabbitMQMessageBroker>(sp =>
+        {
+            var config = sp.GetRequiredService<IConfiguration>();
+            var logger = sp.GetRequiredService<ILogger<RabbitMQMessageBroker>>();
+            return new RabbitMQMessageBroker(config, logger, sp);
+        });
         services.AddSingleton<CartCheckoutMessageHandler>();
 
         // Configure HttpClient for CatalogService
