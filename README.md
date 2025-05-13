@@ -23,9 +23,7 @@
 
 ---
 
-## 🧱 Архитектура
-
-### 🧩 Архитектура микросервисов
+## 🧱 Архитектура микросервисов
 
 ```mermaid
 graph TD
@@ -35,42 +33,59 @@ graph TD
     end
 
     subgraph CoreServices
-        AU(Auth\nMicroservice)
-        CA(Catalog\nMicroservice)
-        CR(Cart\nMicroservice)
-        OR(Orders\nMicroservice)
-        PA(Payments\nMicroservice)
+        AU(Auth Microservice)
+        CA(Catalog Microservice)
+        CR(Cart Microservice)
+        OR(Orders Microservice)
+        PA(Payments Microservice)
     end
 
     subgraph DomainEvents
-        PU(ProductUpdated)
-        CU(CartUpdated)
-        OC(OrderCreated)
-        PP(PaymentProcessed)
+        CU(Cart Updated)
+        OC(Order Created)
+        PP(Payment Processed)
     end
 
     subgraph AdditionalServices
-        US(User\nMicroservice)
-        NO(Notification\nMicroservice)
-        DE(Delivery\nMicroservice)
+        US(User Microservice)
+        NO(Notification Microservice)
+        DE(Delivery Microservice)
     end
 
+    %% Gateway routing
     AG --> AU
     AG --> CA
     AG --> CR
     AG --> OR
     AG --> PA
 
-    CA --> PU
+    AU --> US
+
     CR --> CU
     OR --> OC
     PA --> PP
 
-    PU --> US
     CU --> NO
     OC --> DE
     PP --> DE
+
 ```
+
+**Примечания:**
+
+- ApiGateway и NotificationMicroservice — будут реализованы позже.
+
+- DeliveryMicroservice — находится в разработке.
+
+### 📌 Преимущества архитектуры
+- **Масштабируемость**: каждый сервис можно масштабировать независимо в зависимости от нагрузки.
+
+- **Гибкость**: возможность замены или обновления отдельных сервисов без влияния на всю систему.
+
+- **Устойчивость**: сбой одного сервиса не приводит к остановке всей системы.
+
+- **Простота сопровождения**: четкое разделение ответственности между сервисами облегчает поддержку и развитие проекта.
+---
 
 - Асинхронная коммуникация осуществляется через RabbitMQ (exchange’ы и очереди для каждого типа событий).
 
