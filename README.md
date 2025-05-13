@@ -28,15 +28,17 @@
 ```mermaid
 graph TD
 
+%% ───── Связующий узел для вертикального выравнивания ─────
+   Anchor1 --> Anchor2 --> Anchor3 --> Anchor4 --> Anchor5
+
 %% ───── Layer 1: Gateway ─────
    subgraph Layer1_Gateway
-      direction TB
       AG[ApiGateway]
    end
+   Anchor1 --> AG
 
 %% ───── Layer 2: Core Services ─────
    subgraph Layer2_CoreServices
-      direction TB
       AU[Auth Service]
       CA[Catalog Service]
       CR[Cart Service]
@@ -44,17 +46,17 @@ graph TD
       PA[Payments Service]
       DE[Delivery Service]
    end
+   Anchor2 --> AU
 
-%% ───── Layer 3: Broker & User ─────
+%% ───── Layer 3: Message Broker & User ─────
    subgraph Layer3_BrokerAndUser
-      direction TB
       RMQ[(RabbitMQ)]
       US[User Service]
    end
+   Anchor3 --> RMQ
 
 %% ───── Layer 4: Domain Events ─────
    subgraph Layer4_DomainEvents
-      direction TB
       OC[Order Created]
       OPS[Payment Successful]
       OPF[Payment Failed]
@@ -63,23 +65,13 @@ graph TD
       OP[Order Picked Up]
       DL[Order Delivered]
    end
+   Anchor4 --> OC
 
 %% ───── Layer 5: Notification ─────
    subgraph Layer5_Notifications
-      direction TB
       NO[Notification Service]
    end
-
-%% Force vertical alignment with invisible link
-   AG --> AU
-   AU --> RMQ
-   RMQ --> OC
-   OC --> NO
-   style AG fill-opacity:0,stroke-opacity:0
-   style AU fill-opacity:0,stroke-opacity:0
-   style RMQ fill-opacity:0,stroke-opacity:0
-   style OC fill-opacity:0,stroke-opacity:0
-   style NO fill-opacity:0,stroke-opacity:0
+   Anchor5 --> NO
 
 %% Gateway routing
    AG --> AU
