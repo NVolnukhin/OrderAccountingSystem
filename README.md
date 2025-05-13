@@ -28,71 +28,69 @@
 ```mermaid
 graph TD
 
-    %% ───── Gateway ─────
-    subgraph Gateway
-        AG(ApiGateway)
-    end
+%% ───── Gateway ─────
+   subgraph Gateway
+      AG[ApiGateway]
+   end
 
-    %% ───── Core Services ─────
-    subgraph CoreServices
-        AU(Auth Microservice)
-        CA(Catalog Microservice)
-        CR(Cart Microservice)
-        OR(Orders Microservice)
-        PA(Payments Microservice)
-    end
+%% ───── Core Services ─────
+   subgraph CoreServices
+      AU[Auth Microservice]
+      CA[Catalog Microservice]
+      CR[Cart Microservice]
+      OR[Orders Microservice]
+      PA[Payments Microservice]
+      DE[Delivery Microservice]
+   end
 
-    %% ───── Domain Events ─────
-    subgraph DomainEvents
-        CU(Cart Updated)
-        OC(Order Created)
-        OP(Order Paid)
-        OF(Order Failed)
-        RF(Refund Issued)
-        OD(Order Dispatched)
-        OK(Order Picked Up)
-        DL(Order Delivered)
-    end
+%% ───── User Services ─────
+   subgraph UserServices
+      US[User Microservice]
+   end
 
-    %% ───── User Services ─────
-    subgraph UserServices
-        US(User Microservice)
-    end
+%% ───── Notification Layer ─────
+   subgraph Notification
+      NO[Notification Microservice]
+   end
 
-    %% ───── Notification Layer ─────
-    subgraph Notification
-        NO(Notification Microservice)
-    end
+%% ───── Message Broker ─────
+   subgraph Broker
+      RMQ[(RabbitMQ)]
+   end
 
-    %% Gateway routing
-    AG --> AU
-    AG --> CA
-    AG --> CR
-    AG --> OR
-    AG --> PA
+%% Gateway routing
+   AG --> AU
+   AG --> CA
+   AG --> CR
+   AG --> OR
+   AG --> PA
 
-    %% Auth → User interaction
-    AU --> US
+%% Auth → User interaction
+   AU --> US
 
-    %% Events published by core services
-    CR --> CU
-    OR --> OC
-    PA --> OP
-    PA --> OF
-    PA --> RF
-    OR --> OD
-    DE(Delivery Microservice) --> OK
-    DE --> DL
+%% Events published by core services to RabbitMQ
+   CR -- publishes --> RMQ
+   OR -- publishes --> RMQ
+   PA -- publishes --> RMQ
+   DE -- publishes --> RMQ
 
-    %% Notification reacts to all order-related events
-    CU --> NO
-    OC --> NO
-    OP --> NO
-    OF --> NO
-    RF --> NO
-    OD --> NO
-    OK --> NO
-    DL --> NO
+%% Events consumed by services from RabbitMQ
+   RMQ -- Order Created --> PA
+   RMQ -- Order Payment Successful --> OR
+   RMQ -- Order Payment Failed --> OR
+   RMQ -- Refund Issued --> OR
+   RMQ -- Order Dispatched --> DE
+   RMQ -- Order Picked Up --> OR
+   RMQ -- Order Delivered --> OR
+
+%% Notification Microservice subscribes to all order-related events
+   RMQ -- Order Created --> NO
+   RMQ -- Order Payment Successful --> NO
+   RMQ -- Order Payment Failed --> NO
+   RMQ -- Refund Issued --> NO
+   RMQ -- Order Dispatched --> NO
+   RMQ -- Order Picked Up --> NO
+   RMQ -- Order Delivered --> NO
 
 ```
 
