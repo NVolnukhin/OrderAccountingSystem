@@ -25,30 +25,51 @@
 
 ## 🧱 Архитектура
 
-```plaintext
-                    +----------------------+
-                    |     ApiGateway       |     (будет реализован позже)
-                    +----------┬-----------+
-                               |
-    ┌-----------------┬--------┴-----┬---------------┬-----------------┐
-    |                 |              |               |                 |
-+---┴--------+ +------┴-----+ +------┴-------+ +-----┴--------+ +------┴-------+
-|   Auth     | |   Catalog  | |     Cart     | |    Orders    | |   Payments   |
-|Microservice| |Microservice| | Microservice | | Microservice | | Microservice |
-+------------+ +------------+ +--------------+ +--------------+ +--------------+
-        \              |              \               /                 /
-         \             |               \             /                 /
-          \          publishes       publishes    publishes        publishes
-           \       ProductUpdated   CartUpdated  OrderCreated   PaymentProcessed
-            \          ↓                ↓            ↓                ↓
-             +----------------+   +---------------------+      +------------------+
-             |      User      |   |    Notification     |      |     Delivery     |
-             |  Microservice  |   |    Microservice*    |      |   Microservice*  |
-             +----------------+   +---------------------+      +------------------+
+### 🧩 Архитектура микросервисов
 
+```mermaid
+graph TD
 
-                      * DeliveryMicroservice — в процессе разработки
-                      * NotificationMicroservice — будет реализован позже
+    subgraph Gateway
+        AG(ApiGateway\n*(будет реализован позже)*)
+    end
+
+    subgraph CoreServices
+        AU(Auth\nMicroservice)
+        CA(Catalog\nMicroservice)
+        CR(Cart\nMicroservice)
+        OR(Orders\nMicroservice)
+        PA(Payments\nMicroservice)
+    end
+
+    subgraph DomainEvents
+        PU(ProductUpdated)
+        CU(CartUpdated)
+        OC(OrderCreated)
+        PP(PaymentProcessed)
+    end
+
+    subgraph AdditionalServices
+        US(User\nMicroservice)
+        NO(Notification\nMicroservice\n*(будет реализован позже)*)
+        DE(Delivery\nMicroservice\n*(в процессе разработки)*)
+    end
+
+    AG --> AU
+    AG --> CA
+    AG --> CR
+    AG --> OR
+    AG --> PA
+
+    CA --> PU
+    CR --> CU
+    OR --> OC
+    PA --> PP
+
+    PU --> US
+    CU --> NO
+    OC --> DE
+    PP --> DE
 ```
 
 - Асинхронная коммуникация осуществляется через RabbitMQ (exchange’ы и очереди для каждого типа событий).
