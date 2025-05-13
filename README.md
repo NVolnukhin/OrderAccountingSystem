@@ -70,6 +70,17 @@ graph TD
       NO[Notification Service]
    end
 
+%% Force vertical alignment with invisible link
+   AG --> AU
+   AU --> RMQ
+   RMQ --> OC
+   OC --> NO
+   style AG fill-opacity:0,stroke-opacity:0
+   style AU fill-opacity:0,stroke-opacity:0
+   style RMQ fill-opacity:0,stroke-opacity:0
+   style OC fill-opacity:0,stroke-opacity:0
+   style NO fill-opacity:0,stroke-opacity:0
+
 %% Gateway routing
    AG --> AU
    AG --> CA
