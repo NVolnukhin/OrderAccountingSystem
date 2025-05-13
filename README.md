@@ -79,16 +79,16 @@
 
 ```
 src/
-├── ApiGateway/                 # Единая точка входа (будет добавлена позже)
-├── AuthMicroservice/           # JWT-аутентификация, авторизация
-├── CartMicroservice/           # Корзина товаров для заказов
-├── CatalogMicroservice/        # Каталог товаров (CRUD + Events)
-├── OrderMicroservice/          # Управление заказами
-├── PaymentsMicroservice/       # Обработка платежей
-├── UserMicroservice/           # Данные о пользователях
-├── DeliveryMicroservice/       # (в разработке)
-├── NotificationMicroservice/   # (в разработке)
-├── Shared.Contracts/           # DTO и события
+  ├── ApiGateway/                 # Единая точка входа (будет реализовано позже)
+  ├── AuthMicroservice/           # JWT-аутентификация, авторизация
+  ├── CartMicroservice/           # Корзина товаров для заказов
+  ├── CatalogMicroservice/        # Каталог товаров (CRUD + Events)
+  ├── OrderMicroservice/          # Управление заказами
+  ├── PaymentsMicroservice/       # Обработка платежей
+  ├── UserMicroservice/           # Данные о пользователях
+  ├── DeliveryMicroservice/       # (в разработке)
+  ├── NotificationMicroservice/   # (будет реализовано позже)
+  └── Shared.Contracts/           # DTO и события
 
 ```
 
