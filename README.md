@@ -28,52 +28,37 @@
 ```mermaid
 graph TD
 
-%% ───── Связующий узел для вертикального выравнивания ─────
-   Anchor1 --> Anchor2 --> Anchor3 --> Anchor4 --> Anchor5
-
-%% ───── Layer 1: Gateway ─────
-   subgraph Layer1_Gateway
+%% ───── Gateway ─────
+   subgraph Gateway
       AG[ApiGateway]
    end
-   Anchor1 --> AG
 
-%% ───── Layer 2: Core Services ─────
-   subgraph Layer2_CoreServices
-      AU[Auth Service]
-      CA[Catalog Service]
-      CR[Cart Service]
-      OR[Orders Service]
-      PA[Payments Service]
-      DE[Delivery Service]
+%% ───── Core Services ─────
+   subgraph Core Services
+      AU[Auth Microservice]
+      CA[Catalog Microservice]
+      CR[Cart Microservice]
+      OR[Orders Microservice]
+      PA[Payments Microservice]
+      DE[Delivery Microservice]
    end
-   Anchor2 --> AU
 
-%% ───── Layer 3: Message Broker & User ─────
-   subgraph Layer3_BrokerAndUser
+%% ───── External: User Service ─────
+   subgraph User Service
+      US[User Microservice]
+   end
+
+%% ───── External: Notification ─────
+   subgraph Notification Service
+      NO[Notification Microservice]
+   end
+
+%% ───── Message Broker ─────
+   subgraph Message Broker
       RMQ[(RabbitMQ)]
-      US[User Service]
    end
-   Anchor3 --> RMQ
 
-%% ───── Layer 4: Domain Events ─────
-   subgraph Layer4_DomainEvents
-      OC[Order Created]
-      OPS[Payment Successful]
-      OPF[Payment Failed]
-      RF[Refund Issued]
-      OD[Order Dispatched]
-      OP[Order Picked Up]
-      DL[Order Delivered]
-   end
-   Anchor4 --> OC
-
-%% ───── Layer 5: Notification ─────
-   subgraph Layer5_Notifications
-      NO[Notification Service]
-   end
-   Anchor5 --> NO
-
-%% Gateway routing
+%% Gateway → Core
    AG --> AU
    AG --> CA
    AG --> CR
@@ -83,39 +68,29 @@ graph TD
 %% Auth → User registration
    AU --> US
 
-%% Core services publish to RabbitMQ
-   CR --> RMQ
-   OR --> RMQ
-   PA --> RMQ
-   DE --> RMQ
+%% Core publishes events
+   CR -- publishes --> RMQ
+   OR -- publishes --> RMQ
+   PA -- publishes --> RMQ
+   DE -- publishes --> RMQ
 
-%% Events flow from RabbitMQ
-   RMQ --> OC
-   RMQ --> OPS
-   RMQ --> OPF
-   RMQ --> RF
-   RMQ --> OD
-   RMQ --> OP
-   RMQ --> DL
+%% Core services consume events
+   RMQ -- Order Created --> PA
+   RMQ -- Payment Successful --> OR
+   RMQ -- Payment Failed --> OR
+   RMQ -- Refund Issued --> OR
+   RMQ -- Order Dispatched --> DE
+   RMQ -- Order Picked Up --> OR
+   RMQ -- Order Delivered --> OR
 
-%% Event consumers
-   OC --> PA
-   OPS --> OR
-   OPF --> OR
-   RF --> OR
-   OD --> DE
-   OP --> OR
-   DL --> OR
-
-%% Notification service listens to all
-   OC --> NO
-   OPS --> NO
-   OPF --> NO
-   RF --> NO
-   OD --> NO
-   OP --> NO
-   DL --> NO
-
+%% Notification subscribes to all order-related events
+   RMQ -- Order Created --> NO
+   RMQ -- Payment Successful --> NO
+   RMQ -- Payment Failed --> NO
+   RMQ -- Refund Issued --> NO
+   RMQ -- Order Dispatched --> NO
+   RMQ -- Order Picked Up --> NO
+   RMQ -- Order Delivered --> NO
 ```
 
 **Примечания:**
