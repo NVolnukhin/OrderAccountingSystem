@@ -29,12 +29,14 @@
 graph TD
 
 %% ───── Gateway ─────
-   subgraph Layer 1: Gateway
+   subgraph Gateway
+      direction TB
       AG[ApiGateway]
    end
 
 %% ───── Core Services ─────
-   subgraph Layer 2: Core Services
+   subgraph Core Services
+      direction TB
       AU[Auth Service]
       CA[Catalog Service]
       CR[Cart Service]
@@ -44,12 +46,14 @@ graph TD
    end
 
 %% ───── Message Broker ─────
-   subgraph Layer 3: Message Broker
+   subgraph Message Broker
+      direction TB
       RMQ[(RabbitMQ)]
    end
 
 %% ───── Domain Events ─────
-   subgraph Layer 4: Domain Events
+   subgraph Domain Events
+      direction TB
       OC[Order Created]
       OPS[Payment Successful]
       OPF[Payment Failed]
@@ -59,8 +63,9 @@ graph TD
       DL[Order Delivered]
    end
 
-%% ───── User & Notification ─────
-   subgraph Layer 5: External Services
+%% ───── External Services ─────
+   subgraph External Services
+      direction TB
       US[User Service]
       NO[Notification Service]
    end
@@ -75,13 +80,13 @@ graph TD
 %% Auth → User registration
    AU --> US
 
-%% Publishing to RabbitMQ
+%% Core publishes to RabbitMQ
    CR --> RMQ
    OR --> RMQ
    PA --> RMQ
    DE --> RMQ
 
-%% Events published
+%% Events from RabbitMQ
    RMQ --> OC
    RMQ --> OPS
    RMQ --> OPF
@@ -90,7 +95,7 @@ graph TD
    RMQ --> OP
    RMQ --> DL
 
-%% Services consume from RabbitMQ
+%% Event consumers
    OC --> PA
    OPS --> OR
    OPF --> OR
@@ -99,7 +104,7 @@ graph TD
    OP --> OR
    DL --> OR
 
-%% Notifications subscribe to all events
+%% Notifications
    OC --> NO
    OPS --> NO
    OPF --> NO
