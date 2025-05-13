@@ -36,9 +36,9 @@
 |   Auth     | |   Catalog  | |     Cart     | |    Orders    | |   Payments   |
 |Microservice| |Microservice| | Microservice | | Microservice | | Microservice |
 +------------+ +------------+ +--------------+ +--------------+ +--------------+
-        \              |              \             /               /
-         \             |               \           /               /
-          \        publishes        publishes   publishes       publishes
+        \              |              \               /                 /
+         \             |               \             /                 /
+          \          publishes       publishes    publishes        publishes
            \       ProductUpdated   CartUpdated  OrderCreated   PaymentProcessed
             \          ↓                ↓            ↓                ↓
              +----------------+   +---------------------+      +------------------+
