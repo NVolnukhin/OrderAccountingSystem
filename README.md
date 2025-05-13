@@ -29,33 +29,40 @@
 graph TD
 
 %% ───── Gateway ─────
-   subgraph Gateway
+   subgraph Layer 1: Gateway
       AG[ApiGateway]
    end
 
 %% ───── Core Services ─────
-   subgraph CoreServices
-      AU[Auth Microservice]
-      CA[Catalog Microservice]
-      CR[Cart Microservice]
-      OR[Orders Microservice]
-      PA[Payments Microservice]
-      DE[Delivery Microservice]
-   end
-
-%% ───── User Services ─────
-   subgraph UserServices
-      US[User Microservice]
-   end
-
-%% ───── Notification Layer ─────
-   subgraph Notification
-      NO[Notification Microservice]
+   subgraph Layer 2: Core Services
+      AU[Auth Service]
+      CA[Catalog Service]
+      CR[Cart Service]
+      OR[Orders Service]
+      PA[Payments Service]
+      DE[Delivery Service]
    end
 
 %% ───── Message Broker ─────
-   subgraph Broker
+   subgraph Layer 3: Message Broker
       RMQ[(RabbitMQ)]
+   end
+
+%% ───── Domain Events ─────
+   subgraph Layer 4: Domain Events
+      OC[Order Created]
+      OPS[Payment Successful]
+      OPF[Payment Failed]
+      RF[Refund Issued]
+      OD[Order Dispatched]
+      OP[Order Picked Up]
+      DL[Order Delivered]
+   end
+
+%% ───── User & Notification ─────
+   subgraph Layer 5: External Services
+      US[User Service]
+      NO[Notification Service]
    end
 
 %% Gateway routing
@@ -65,32 +72,41 @@ graph TD
    AG --> OR
    AG --> PA
 
-%% Auth → User interaction
+%% Auth → User registration
    AU --> US
 
-%% Events published by core services to RabbitMQ
-   CR -- publishes --> RMQ
-   OR -- publishes --> RMQ
-   PA -- publishes --> RMQ
-   DE -- publishes --> RMQ
+%% Publishing to RabbitMQ
+   CR --> RMQ
+   OR --> RMQ
+   PA --> RMQ
+   DE --> RMQ
 
-%% Events consumed by services from RabbitMQ
-   RMQ -- Order Created --> PA
-   RMQ -- Order Payment Successful --> OR
-   RMQ -- Order Payment Failed --> OR
-   RMQ -- Refund Issued --> OR
-   RMQ -- Order Dispatched --> DE
-   RMQ -- Order Picked Up --> OR
-   RMQ -- Order Delivered --> OR
+%% Events published
+   RMQ --> OC
+   RMQ --> OPS
+   RMQ --> OPF
+   RMQ --> RF
+   RMQ --> OD
+   RMQ --> OP
+   RMQ --> DL
 
-%% Notification Microservice subscribes to all order-related events
-   RMQ -- Order Created --> NO
-   RMQ -- Order Payment Successful --> NO
-   RMQ -- Order Payment Failed --> NO
-   RMQ -- Refund Issued --> NO
-   RMQ -- Order Dispatched --> NO
-   RMQ -- Order Picked Up --> NO
-   RMQ -- Order Delivered --> NO
+%% Services consume from RabbitMQ
+   OC --> PA
+   OPS --> OR
+   OPF --> OR
+   RF --> OR
+   OD --> DE
+   OP --> OR
+   DL --> OR
+
+%% Notifications subscribe to all events
+   OC --> NO
+   OPS --> NO
+   OPF --> NO
+   RF --> NO
+   OD --> NO
+   OP --> NO
+   DL --> NO
 
 ```
 
