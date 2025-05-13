@@ -31,7 +31,7 @@
 graph TD
 
     subgraph Gateway
-        AG(ApiGateway\n*(будет реализован позже)*)
+        AG(ApiGateway)
     end
 
     subgraph CoreServices
