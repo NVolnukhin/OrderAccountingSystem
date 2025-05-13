@@ -28,10 +28,12 @@
 ```mermaid
 graph TD
 
+    %% ───── Gateway ─────
     subgraph Gateway
         AG(ApiGateway)
     end
 
+    %% ───── Core Services ─────
     subgraph CoreServices
         AU(Auth Microservice)
         CA(Catalog Microservice)
@@ -40,16 +42,26 @@ graph TD
         PA(Payments Microservice)
     end
 
+    %% ───── Domain Events ─────
     subgraph DomainEvents
         CU(Cart Updated)
         OC(Order Created)
-        PP(Payment Processed)
+        OP(Order Paid)
+        OF(Order Failed)
+        RF(Refund Issued)
+        OD(Order Dispatched)
+        OK(Order Picked Up)
+        DL(Order Delivered)
     end
 
-    subgraph AdditionalServices
+    %% ───── User Services ─────
+    subgraph UserServices
         US(User Microservice)
+    end
+
+    %% ───── Notification Layer ─────
+    subgraph Notification
         NO(Notification Microservice)
-        DE(Delivery Microservice)
     end
 
     %% Gateway routing
@@ -59,15 +71,28 @@ graph TD
     AG --> OR
     AG --> PA
 
+    %% Auth → User interaction
     AU --> US
 
+    %% Events published by core services
     CR --> CU
     OR --> OC
-    PA --> PP
+    PA --> OP
+    PA --> OF
+    PA --> RF
+    OR --> OD
+    DE(Delivery Microservice) --> OK
+    DE --> DL
 
+    %% Notification reacts to all order-related events
     CU --> NO
-    OC --> DE
-    PP --> DE
+    OC --> NO
+    OP --> NO
+    OF --> NO
+    RF --> NO
+    OD --> NO
+    OK --> NO
+    DL --> NO
 
 ```
 
