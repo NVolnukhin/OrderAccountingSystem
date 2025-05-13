@@ -28,14 +28,14 @@
 ```mermaid
 graph TD
 
-%% ───── Gateway ─────
-   subgraph Gateway
+%% ───── Layer 1: Gateway ─────
+   subgraph Layer1_Gateway
       direction TB
       AG[ApiGateway]
    end
 
-%% ───── Core Services ─────
-   subgraph Core Services
+%% ───── Layer 2: Core Services ─────
+   subgraph Layer2_CoreServices
       direction TB
       AU[Auth Service]
       CA[Catalog Service]
@@ -45,14 +45,15 @@ graph TD
       DE[Delivery Service]
    end
 
-%% ───── Message Broker ─────
-   subgraph Message Broker
+%% ───── Layer 3: Broker & User ─────
+   subgraph Layer3_BrokerAndUser
       direction TB
       RMQ[(RabbitMQ)]
+      US[User Service]
    end
 
-%% ───── Domain Events ─────
-   subgraph Domain Events
+%% ───── Layer 4: Domain Events ─────
+   subgraph Layer4_DomainEvents
       direction TB
       OC[Order Created]
       OPS[Payment Successful]
@@ -63,10 +64,9 @@ graph TD
       DL[Order Delivered]
    end
 
-%% ───── External Services ─────
-   subgraph External Services
+%% ───── Layer 5: Notification ─────
+   subgraph Layer5_Notifications
       direction TB
-      US[User Service]
       NO[Notification Service]
    end
 
@@ -80,13 +80,13 @@ graph TD
 %% Auth → User registration
    AU --> US
 
-%% Core publishes to RabbitMQ
+%% Core services publish to RabbitMQ
    CR --> RMQ
    OR --> RMQ
    PA --> RMQ
    DE --> RMQ
 
-%% Events from RabbitMQ
+%% Events flow from RabbitMQ
    RMQ --> OC
    RMQ --> OPS
    RMQ --> OPF
@@ -104,7 +104,7 @@ graph TD
    OP --> OR
    DL --> OR
 
-%% Notifications
+%% Notification service listens to all
    OC --> NO
    OPS --> NO
    OPF --> NO
