@@ -51,8 +51,8 @@ graph TD
 
     subgraph AdditionalServices
         US(User\nMicroservice)
-        NO(Notification\nMicroservice\n*(будет реализован позже)*)
-        DE(Delivery\nMicroservice\n*(в процессе разработки)*)
+        NO(Notification\nMicroservice)
+        DE(Delivery\nMicroservice)
     end
 
     AG --> AU
