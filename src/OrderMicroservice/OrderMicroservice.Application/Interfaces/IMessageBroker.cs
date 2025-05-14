@@ -9,5 +9,6 @@ public interface IMessageBroker
     Task PublishOrderCreatedAsync(OrderResponseDto order);
     Task PublishOrderStatusChangedAsync(Guid orderId, string status);
     Task SubscribeToPaymentEventsAsync();
+    Task SubscribeToDeliveryEventsAsync();
     Task SubscribeAsync<T>(IMessageHandler<T> handler) where T : class;
 } 
