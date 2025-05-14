@@ -28,6 +28,11 @@ public class PaymentCompletedHandler : IMessageHandler<PaymentCompletedEvent>
             
             _logger.LogInformation("Current order status before update: {OrderId}", message.OrderId);
             var currentOrder = await _orderService.GetOrderByIdAsync(message.OrderId);
+            if (currentOrder == null)
+            {
+                _logger.LogWarning("Order {OrderId} not found, skipping status update", message.OrderId);
+                return;
+            }
             _logger.LogInformation("Current order status: {Status}", currentOrder.Status);
             
             _logger.LogInformation("Updating order {OrderId} status to Paid", message.OrderId);
