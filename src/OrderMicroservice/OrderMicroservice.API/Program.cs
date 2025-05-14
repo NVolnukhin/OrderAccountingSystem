@@ -21,6 +21,7 @@ builder.Services.Configure<RabbitMQSettings>(builder.Configuration.GetSection("R
 builder.Services.AddScoped<IMessageHandler<PaymentCompletedEvent>, PaymentCompletedHandler>();
 builder.Services.AddScoped<IMessageHandler<PaymentFailedEvent>, PaymentFailedHandler>();
 builder.Services.AddScoped<IMessageHandler<PaymentRefundedEvent>, PaymentRefundedHandler>();
+builder.Services.AddScoped<IMessageHandler<DeliveryStatusUpdatedEvent>, DeliveryStatusChangedHandler>();
 
 var app = builder.Build();
 
@@ -58,6 +59,10 @@ using (var scope = app.Services.CreateScope())
     logger.LogInformation("Setting up payment events subscription...");
     await messageBroker.SubscribeToPaymentEventsAsync();
     logger.LogInformation("Successfully subscribed to payment events");
+
+    logger.LogInformation("Setting up delivery events subscription...");
+    await messageBroker.SubscribeToDeliveryEventsAsync();
+    logger.LogInformation("Successfully subscribed to delivery events");
 }
 
 app.Run();
