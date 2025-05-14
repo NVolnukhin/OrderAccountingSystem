@@ -1,13 +1,11 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PaymentsMicroservice.Application.Interfaces;
-using PaymentsMicroservice.Contracts.Messages;
 using PaymentsMicroservice.Domain.Entities;
 using PaymentsMicroservice.Infrastructure.Data;
+using Shared.Contracts.Events;
 
-namespace PaymentsMicroservice.Application.Services;
+namespace PaymentsMicroservice.Infrastructure.Services;
 
 public class PaymentService : IPaymentService
 {

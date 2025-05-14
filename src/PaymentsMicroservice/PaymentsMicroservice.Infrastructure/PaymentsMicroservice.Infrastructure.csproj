@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared.Contracts\Shared.Contracts.csproj" />
     <ProjectReference Include="..\PaymentsMicroservice.Application\PaymentsMicroservice.Application.csproj" />
     <ProjectReference Include="..\PaymentsMicroservice.Domain\PaymentsMicroservice.Domain.csproj" />
   </ItemGroup>

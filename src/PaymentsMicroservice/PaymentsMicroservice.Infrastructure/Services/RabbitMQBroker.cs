@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using PaymentsMicroservice.Application.Interfaces;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Shared.Contracts.Events;
 
 namespace PaymentsMicroservice.Infrastructure.Services;
 
@@ -16,7 +17,8 @@ public class RabbitMQBroker : IMessageBroker, IDisposable
     private readonly IModel _channel;
     private readonly ILogger<RabbitMQBroker> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly string _exchangeName = "order.events";
+    private const string OrderEventsExchange = "order.events";
+    private const string PaymentEventsExchange = "payment.events";
 
     public RabbitMQBroker(
         ILogger<RabbitMQBroker> logger,
@@ -35,28 +37,52 @@ public class RabbitMQBroker : IMessageBroker, IDisposable
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
 
-        _channel.ExchangeDeclare(
-            exchange: _exchangeName,
-            type: ExchangeType.Topic,
-            durable: true,
-            autoDelete: false);
+        _channel.ExchangeDeclare(OrderEventsExchange, ExchangeType.Topic, true);
+        _channel.ExchangeDeclare(PaymentEventsExchange, ExchangeType.Topic, true);
     }
 
     public Task PublishAsync<T>(T message)
     {
         try
         {
-            var messageType = typeof(T).Name.ToLower();
-            var routingKey = $"payments.{messageType}";
+            string exchange;
+            string routingKey;
+            
+            if (message is PaymentCompletedEvent)
+            {
+                exchange = PaymentEventsExchange;
+                routingKey = "payment.completed";
+            }
+            else if (message is PaymentFailedEvent)
+            {
+                exchange = PaymentEventsExchange;
+                routingKey = "payment.failed";
+            }
+            else if (message is PaymentRefundedEvent)
+            {
+                exchange = PaymentEventsExchange;
+                routingKey = "payment.refunded";
+            }
+            else
+            {
+                exchange = OrderEventsExchange;
+                routingKey = typeof(T).Name.ToLower();
+            }
+
             var body = JsonSerializer.SerializeToUtf8Bytes(message);
 
             _channel.BasicPublish(
-                exchange: _exchangeName,
+                exchange: exchange,
                 routingKey: routingKey,
                 basicProperties: null,
                 body: body);
 
-            _logger.LogInformation("Published message of type {MessageType}", messageType);
+            _logger.LogInformation("Published message of type {MessageType} to exchange {Exchange} with routing key: {RoutingKey}", 
+                typeof(T).Name, exchange, routingKey);
+            if (message is PaymentCompletedEvent paymentEvent)
+            {
+                _logger.LogInformation("Published PaymentCompletedEvent with OrderId: {OrderId}", paymentEvent.OrderId);
+            }
             return Task.CompletedTask;
         }
         catch (Exception ex)
@@ -71,7 +97,7 @@ public class RabbitMQBroker : IMessageBroker, IDisposable
         try
         {
             _logger.LogInformation("Setting up subscription to exchange {ExchangeName} with queue {QueueName} and routing key {RoutingKey}", 
-                _exchangeName, queueName, routingKey);
+                OrderEventsExchange, queueName, routingKey);
 
             _channel.QueueDeclare(
                 queue: queueName,
@@ -82,11 +108,11 @@ public class RabbitMQBroker : IMessageBroker, IDisposable
 
             _channel.QueueBind(
                 queue: queueName,
-                exchange: _exchangeName,
+                exchange: OrderEventsExchange,
                 routingKey: routingKey);
 
             _logger.LogInformation("Queue {QueueName} bound to exchange {ExchangeName} with routing key {RoutingKey}", 
-                queueName, _exchangeName, routingKey);
+                queueName, OrderEventsExchange, routingKey);
 
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += async (model, ea) =>
@@ -106,6 +132,10 @@ public class RabbitMQBroker : IMessageBroker, IDisposable
                     if (message != null)
                     {
                         _logger.LogInformation("Processing message of type {MessageType}", typeof(T).Name);
+                        if (message is OrderCreatedEvent orderEvent)
+                        {
+                            _logger.LogInformation("Received OrderCreatedEvent with OrderId: {OrderId}", orderEvent.OrderId);
+                        }
                         await scopedHandler.HandleAsync(message);
                         _channel.BasicAck(ea.DeliveryTag, false);
                         _logger.LogInformation("Message processed successfully");
