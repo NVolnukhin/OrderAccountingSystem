@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PaymentsMicroservice.Application.Interfaces;
-using PaymentsMicroservice.Application.Services;
 using PaymentsMicroservice.Infrastructure.Data;
 using PaymentsMicroservice.Infrastructure.Services;
+using Shared.Contracts.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +19,7 @@ builder.Services.AddDbContext<PaymentsDbContext>(options =>
 // Add services
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddSingleton<IMessageBroker, RabbitMQBroker>();
-builder.Services.AddScoped<IMessageHandler<PaymentsMicroservice.Contracts.Messages.OrderCreatedEvent>, OrderCreatedHandler>();
+builder.Services.AddScoped<IMessageHandler<OrderCreatedEvent>, OrderCreatedHandler>();
 
 var app = builder.Build();
 
@@ -40,7 +40,7 @@ var messageBroker = app.Services.GetRequiredService<IMessageBroker>();
 // Create a scope for subscription
 using (var scope = app.Services.CreateScope())
 {
-    var orderCreatedHandler = scope.ServiceProvider.GetRequiredService<IMessageHandler<PaymentsMicroservice.Contracts.Messages.OrderCreatedEvent>>();
+    var orderCreatedHandler = scope.ServiceProvider.GetRequiredService<IMessageHandler<OrderCreatedEvent>>();
     await messageBroker.SubscribeAsync("payments.order.created", "order.created", orderCreatedHandler);
 }
 
