@@ -12,7 +12,8 @@ public enum OrderStatus
     Paid,
     Unpaid,
     Refunded,
-    TransferredForDelivery,
+    PreparingForDelivery,
+    Shipped,
     Delivered,
     Cancelled
 }
@@ -100,7 +101,8 @@ public class OrderService : IOrderService
         var order = await _orderRepository.GetByIdAsync(id);
         if (order == null)
         {
-            throw new KeyNotFoundException($"Order with ID {id} not found");
+            _logger.LogWarning("Order with ID {OrderId} not found", id);
+            return null;
         }
         return MapToOrderResponse(order);
     }
