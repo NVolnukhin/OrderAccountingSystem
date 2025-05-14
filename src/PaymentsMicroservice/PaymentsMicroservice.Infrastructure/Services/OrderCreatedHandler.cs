@@ -1,10 +1,8 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PaymentsMicroservice.Application.Interfaces;
-using PaymentsMicroservice.Contracts.Messages;
+using Shared.Contracts.Events;
 
-namespace PaymentsMicroservice.Application.Services;
+namespace PaymentsMicroservice.Infrastructure.Services;
 
 public class OrderCreatedHandler : IMessageHandler<OrderCreatedEvent>
 {
