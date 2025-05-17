@@ -84,6 +84,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryMicroservice.Domain
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryMicroservice.Infrastructure", "src\DeliveryMicroservice\DeliveryMicroservice.Infrastructure\DeliveryMicroservice.Infrastructure.csproj", "{BE85A1A0-C56A-4ACD-AD78-CF5EFCC431A7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationMicroservice", "NotificationMicroservice", "{58CC4F91-BFB7-4025-8799-4EB099FFFFCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationMicroservice.API", "src\NotificationMicroservice\NotificationMicroservice.API\NotificationMicroservice.API.csproj", "{5D5EE70B-C63A-4BC1-A52B-B35694C07ABE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationMicroservice.Application", "src\NotificationMicroservice\NotificationMicroservice.Application\NotificationMicroservice.Application.csproj", "{B135874E-49D7-4308-9861-5471DA037992}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationMicroservice.Domain", "src\NotificationMicroservice\NotificationMicroservice.Domain\NotificationMicroservice.Domain.csproj", "{72749582-8FDE-49F9-A799-29ACF5BC1E83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationMicroservice.Infrastructure", "src\NotificationMicroservice\NotificationMicroservice.Infrastructure\NotificationMicroservice.Infrastructure.csproj", "{AF7DDC10-C9B8-4752-8208-7B0CDAAEB05E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +235,22 @@ Global
 		{BE85A1A0-C56A-4ACD-AD78-CF5EFCC431A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE85A1A0-C56A-4ACD-AD78-CF5EFCC431A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE85A1A0-C56A-4ACD-AD78-CF5EFCC431A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D5EE70B-C63A-4BC1-A52B-B35694C07ABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D5EE70B-C63A-4BC1-A52B-B35694C07ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D5EE70B-C63A-4BC1-A52B-B35694C07ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D5EE70B-C63A-4BC1-A52B-B35694C07ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B135874E-49D7-4308-9861-5471DA037992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B135874E-49D7-4308-9861-5471DA037992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B135874E-49D7-4308-9861-5471DA037992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B135874E-49D7-4308-9861-5471DA037992}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72749582-8FDE-49F9-A799-29ACF5BC1E83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72749582-8FDE-49F9-A799-29ACF5BC1E83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72749582-8FDE-49F9-A799-29ACF5BC1E83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72749582-8FDE-49F9-A799-29ACF5BC1E83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF7DDC10-C9B8-4752-8208-7B0CDAAEB05E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7DDC10-C9B8-4752-8208-7B0CDAAEB05E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7DDC10-C9B8-4752-8208-7B0CDAAEB05E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7DDC10-C9B8-4752-8208-7B0CDAAEB05E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{89CB421A-40C3-4918-A164-E5B672AA9352} = {A1A3A201-9017-4DB0-814B-811E36F80F4A}
@@ -267,5 +293,10 @@ Global
 		{72053ABB-9D95-45F3-875A-6E5EC814AC97} = {68864CA1-9A96-47FC-960F-342AEB3FC99E}
 		{B8B6D919-B94A-4519-8F66-5A84599F53C2} = {68864CA1-9A96-47FC-960F-342AEB3FC99E}
 		{BE85A1A0-C56A-4ACD-AD78-CF5EFCC431A7} = {68864CA1-9A96-47FC-960F-342AEB3FC99E}
+		{58CC4F91-BFB7-4025-8799-4EB099FFFFCA} = {A1A3A201-9017-4DB0-814B-811E36F80F4A}
+		{5D5EE70B-C63A-4BC1-A52B-B35694C07ABE} = {58CC4F91-BFB7-4025-8799-4EB099FFFFCA}
+		{B135874E-49D7-4308-9861-5471DA037992} = {58CC4F91-BFB7-4025-8799-4EB099FFFFCA}
+		{72749582-8FDE-49F9-A799-29ACF5BC1E83} = {58CC4F91-BFB7-4025-8799-4EB099FFFFCA}
+		{AF7DDC10-C9B8-4752-8208-7B0CDAAEB05E} = {58CC4F91-BFB7-4025-8799-4EB099FFFFCA}
 	EndGlobalSection
 EndGlobal
